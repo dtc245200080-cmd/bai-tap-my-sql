@@ -31,3 +31,52 @@ UNIQUE (SubId, StudentId),
 FOREIGN KEY (SubId) REFERENCES Subject (SubId),
 FOREIGN KEY (StudentId) REFERENCES Student (StudentId)
  );
+ INSERT INTO Class (ClassID, ClassName, StartDate, Status)
+VALUES (1, 'A1', '2008-12-20', 1);
+
+INSERT INTO Class (ClassID, ClassName, StartDate, Status)
+VALUES (2, 'A2', '2008-12-22', 1);
+
+INSERT INTO Class (ClassID, ClassName, StartDate, Status)
+VALUES (3, 'B3', CURRENT_DATE, 0);
+
+-- Bước 3: Thêm dữ liệu vào bảng Student (không chèn StudentID nếu là cột khóa chính tự tăng - AUTO_INCREMENT)
+INSERT INTO Student (StudentName, Address, Phone, Status, ClassId)
+VALUES ('Hung', 'Ha Noi', '0912113113', 1, 1);
+
+INSERT INTO Student (StudentName, Address, Status, ClassId)
+VALUES ('Hoa', 'Hai phong', 1, 1);
+
+INSERT INTO Student (StudentName, Address, Phone, Status, ClassId)
+VALUES ('Manh', 'HCM', '0123123123', 0, 2);
+
+-- Bước 4: Thêm nhiều bản ghi cùng lúc vào bảng Subject
+INSERT INTO Subject (SubID, SubName, Credit, Status)
+VALUES (1, 'CF', 5, 1),
+       (2, 'C', 6, 1),
+       (3, 'HDJ', 5, 1),
+       (4, 'RDBMS', 10, 1);
+
+-- Bước 5: Thêm dữ liệu vào bảng Mark
+INSERT INTO Mark (SubId, StudentId, Mark, ExamTimes)
+VALUES (1, 1, 8, 1),
+       (1, 2, 10, 2),
+       (2, 1, 12, 1);
+SELECT *
+FROM Student;
+SELECT *
+FROM Student
+WHERE Status = true;
+SELECT *
+FROM Subject
+WHERE Credit < 10;
+SELECT S.StudentId, S.StudentName, C.ClassName
+FROM Student S join Class C on S.ClassId = C.ClassID;
+SELECT S.StudentId, S.StudentName, C.ClassName
+FROM Student S join Class C on S.ClassId = C.ClassID
+WHERE C.ClassName = 'A1';
+SELECT S.StudentId, S.StudentName, Sub.SubName, M.Mark
+FROM Student S join Mark M on S.StudentId = M.StudentId join Subject Sub on M.SubId = Sub.SubId;
+SELECT S.StudentId, S.StudentName, Sub.SubName, M.Mark
+FROM Student S join Mark M on S.StudentId = M.StudentId join Subject Sub on M.SubId = Sub.SubId
+WHERE Sub.SubName = 'CF';
