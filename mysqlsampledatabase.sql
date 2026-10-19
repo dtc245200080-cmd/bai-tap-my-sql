@@ -150,29 +150,28 @@ EXPLAIN SELECT * FROM customers WHERE customerName = 'Land of Toys Inc.';
 -- Bước 1.2: Tạo chỉ mục đơn cho trường customerName
 ALTER TABLE customers ADD INDEX idx_customerName(customerName);
 
--- Bước 1.3: Thực hiện truy vấn EXPLAIN sau khi tạo chỉ mục
--- So sánh kết quả: type chuyển từ 'ALL' thành 'ref', số rows quét giảm xuống còn 1.
+-- Bước 1.3: Sử dụng lệnh EXPLAIN sau khi tạo chỉ mục
+-- Phân tích: type chuyển thành 'ref', key = 'idx_customerName', số rows duyệt giảm xuống còn 1.
 EXPLAIN SELECT * FROM customers WHERE customerName = 'Land of Toys Inc.';
 
 
 -- -----------------------------------------------------------------
--- 2. TẠO VÀ ĐÁNH GIÁ CHỈ MỤC KÉP (contactFirstName, contactLastName)
+-- 2. TẠO VÀ ĐÁNH GIÁ CHỈ MỤC KÉP (COMPOSITE INDEX)
 -- -----------------------------------------------------------------
 
--- Bước 2.1: Thực hiện truy vấn EXPLAIN trước khi tạo chỉ mục kép
--- Kết quả dự kiến: type = 'ALL' (Phải duyệt qua toàn bộ bảng để tìm kiếm)
+-- Bước 2.1: Sử dụng lệnh EXPLAIN trước khi tạo chỉ mục kép
 EXPLAIN SELECT * FROM customers WHERE contactFirstName = 'Jean' AND contactLastName = 'King';
 
--- Bước 2.2: Tạo chỉ mục kép cho 2 trường contactFirstName và contactLastName
+-- Bước 2.2: Tạo chỉ mục kép cho contactFirstName và contactLastName
 ALTER TABLE customers ADD INDEX idx_full_name(contactFirstName, contactLastName);
 
--- Bước 2.3: Thực hiện truy vấn EXPLAIN sau khi tạo chỉ mục kép
--- So sánh kết quả: type chuyển từ 'ALL' thành 'ref', possible_keys và key xuất hiện 'idx_full_name'
+-- Bước 2.3: Sử dụng lệnh EXPLAIN sau khi tạo chỉ mục kép
+-- Phân tích: type = 'ref', key = 'idx_full_name', tối ưu hóa tìm kiếm kết hợp cả 2 cột.
 EXPLAIN SELECT * FROM customers WHERE contactFirstName = 'Jean' AND contactLastName = 'King';
 
 
 -- -----------------------------------------------------------------
--- 3. HƯỚNG DẪN XÓA CHỈ MỤC ĐÃ TẠO
+-- 3. HƯỚNG DẪN XÓA CHỈ MỤC
 -- -----------------------------------------------------------------
 
 -- Xóa chỉ mục đơn idx_customerName
