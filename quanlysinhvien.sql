@@ -128,3 +128,29 @@ SELECT S.StudentId, S.StudentName, AVG(Mark)
 FROM Student S join Mark M on S.StudentId = M.StudentId
 GROUP BY S.StudentId, S.StudentName
 HAVING AVG(Mark) >= ALL (SELECT AVG(Mark) FROM Mark GROUP BY Mark.StudentId);
+USE QuanLySinhVien;
+
+-- Yêu cầu 1: Hiển thị tất cả các thông tin môn học (bảng Subject) có credit lớn nhất
+SELECT *
+FROM Subject
+WHERE Credit = (SELECT MAX(Credit) FROM Subject);
+
+-- Yêu cầu 2: Hiển thị các thông tin môn học có điểm thi lớn nhất
+SELECT S.SubId, S.SubName, S.Credit, S.Status, M.Mark
+FROM Subject S
+JOIN Mark M ON S.SubId = M.SubId
+WHERE M.Mark = (SELECT MAX(Mark) FROM Mark);
+
+-- Yêu cầu 3: Hiển thị các thông tin sinh viên và điểm trung bình của mỗi sinh viên, xếp hạng theo thứ tự điểm giảm dần
+SELECT 
+    S.StudentId, 
+    S.StudentName, 
+    S.Address, 
+    S.Phone, 
+    S.Status, 
+    S.ClassId, 
+    COALESCE(AVG(M.Mark), 0) AS AvgMark
+FROM Student S
+LEFT JOIN Mark M ON S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName, S.Address, S.Phone, S.Status, S.ClassId
+ORDER BY AvgMark DESC;
