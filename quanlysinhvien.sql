@@ -130,6 +130,10 @@ GROUP BY S.StudentId, S.StudentName
 HAVING AVG(Mark) >= ALL (SELECT AVG(Mark) FROM Mark GROUP BY Mark.StudentId);
 USE QuanLySinhVien;
 
+-- =========================================================================
+-- [BÀI TẬP] LUYỆN TẬP CÁC HÀM THÔNG DỤNG TRONG SQL
+-- =========================================================================
+
 -- Yêu cầu 1: Hiển thị tất cả các thông tin môn học (bảng Subject) có credit lớn nhất
 SELECT *
 FROM Subject
@@ -149,8 +153,8 @@ SELECT
     S.Phone, 
     S.Status, 
     S.ClassId, 
-    COALESCE(AVG(M.Mark), 0) AS AvgMark
+    AVG(M.Mark) AS AvgMark
 FROM Student S
-LEFT JOIN Mark M ON S.StudentId = M.StudentId
+JOIN Mark M ON S.StudentId = M.StudentId
 GROUP BY S.StudentId, S.StudentName, S.Address, S.Phone, S.Status, S.ClassId
 ORDER BY AvgMark DESC;
