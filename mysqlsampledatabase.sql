@@ -152,3 +152,32 @@ EXPLAIN SELECT * FROM customers WHERE customerName = 'Land of Toys Inc.';
 ALTER TABLE customers ADD INDEX idx_full_name(contactFirstName, contactLastName);
 EXPLAIN SELECT * FROM customers WHERE contactFirstName = 'Jean' or contactFirstName = 'King';
 ALTER TABLE customers DROP INDEX idx_full_name;
+-- Switch to classicmodels database
+USE classicmodels;
+
+-- =================================================================
+-- 1. TẠO CHỈ MỤC ĐƠN LẺ (SINGLE-COLUMN INDEX)
+-- Tạo chỉ mục cho trường customerName trong bảng customers
+-- =================================================================
+ALTER TABLE customers ADD INDEX idx_customerName (customerName);
+
+-- Sử dụng lệnh EXPLAIN để so sánh tốc độ / hiệu năng truy vấn trước và sau khi dùng index
+EXPLAIN SELECT * FROM customers WHERE customerName = 'Land of Toys Inc.';
+
+
+-- =================================================================
+-- 2. TẠO CHỈ MỤC KÉP (COMPOSITE INDEX)
+-- Tạo chỉ mục kép cho contactLastName và contactFirstName trong bảng customers
+-- =================================================================
+ALTER TABLE customers ADD INDEX idx_full_name (contactLastName, contactFirstName);
+
+-- Sử dụng lệnh EXPLAIN để so sánh hiệu năng truy vấn theo tên/họ contact
+EXPLAIN SELECT * FROM customers WHERE contactLastName = 'King' AND contactFirstName = 'Jean';
+
+
+-- =================================================================
+-- 3. XÓA CHỈ MỤC TRONG BẢNG (DROP INDEX)
+-- Sử dụng câu lệnh ALTER TABLE DROP INDEX để xóa chỉ mục đã tạo
+-- =================================================================
+ALTER TABLE customers DROP INDEX idx_customerName;
+ALTER TABLE customers DROP INDEX idx_full_name;
